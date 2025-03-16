@@ -1,7 +1,7 @@
 {
   "name": "lpcoder",
   "displayName": "lpcoder",
-  "description": "submit Assessment",
+  "description": "Submit Assessment",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.98.0"
@@ -9,23 +9,42 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:extension.runLocalTest",
+    "onCommand:extension.submitAssessment"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "lpcoder.helloWorld",
-        "title": "Hello World"
+        "command": "extension.runLocalTest",
+        "title": "Run Local Test"
+      },
+      {
+        "command": "extension.submitAssessment",
+        "title": "Submit Assessment"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "extension.runLocalTest",
+          "group": "navigation"
+        },
+        {
+          "command": "extension.submitAssessment",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --mode development",
+    "watch-tests": "tsc --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test"

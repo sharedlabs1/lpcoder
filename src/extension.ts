@@ -1,26 +1,56 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
+import { exec } from 'child_process';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  let runLocalTest = vscode.commands.registerCommand('extension.runLocalTest', () => {
+    vscode.window.showInformationMessage('Running Local Test...');
+    // Add your local test logic here
+  });
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "lpcoder" is now active!');
+  let submitAssessment = vscode.commands.registerCommand('extension.submitAssessment', async () => {
+    try {
+      // Save all files
+      await vscode.workspace.saveAll(false);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('lpcoder.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from lpcoder!');
-	});
+      // Commit changes
+      const repoPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+      if (!repoPath) {
+        throw new Error('No workspace folder found.');
+      }
 
-	context.subscriptions.push(disposable);
+      const gitCommitCommand = `git -C "${repoPath}" commit -am "Assessment submission"`;
+      exec(gitCommitCommand, (error, stdout, stderr) => {
+        if (error) {
+          vscode.window.showErrorMessage(`Commit failed: ${stderr}`);
+          return;
+        }
+
+        // Push changes
+        const pat = fs.readFileSync(path.join(repoPath, 'pat.txt'), 'utf8').trim();
+        const originUrl = fs.readFileSync(path.join(repoPath, 'origin.txt'), 'utf8').trim();
+        const gitPushCommand = `git -C "${repoPath}" push https://${pat}@${originUrl}`;
+
+        exec(gitPushCommand, (error, stdout, stderr) => {
+          if (error) {
+            vscode.window.showErrorMessage(`Push failed: ${stderr}`);
+            return;
+          }
+
+          vscode.window.showInformationMessage('Assessment submitted successfully!');
+        });
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        vscode.window.showErrorMessage(`Error: ${error.message}`);
+      } else {
+        vscode.window.showErrorMessage(`An unknown error occurred: ${error}`);
+      }
+    }
+  });
+
+  context.subscriptions.push(runLocalTest, submitAssessment);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}

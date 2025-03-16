@@ -1,16 +1,25 @@
 {
 	"compilerOptions": {
-		"module": "Node16",
-		"target": "ES2022",
-		"lib": [
-			"ES2022"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true,   /* enable all strict type-checking options */
-		/* Additional Checks */
-		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
-		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
-		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
-	}
-}
+	  "module": "Node16",
+	  "target": "ES2022",
+	  "lib": [
+		"ES2022"
+	  ],
+	  "sourceMap": true,
+	  "rootDir": "src",
+	  "outDir": "out", // Add this to specify the output directory
+	  "strict": true, // Enable all strict type-checking options
+	  "esModuleInterop": true, // Enable ES module interop
+	  "skipLibCheck": true, // Skip type checking of declaration files
+	  "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+	  "moduleResolution": "Node16", // Use Node16 module resolution
+	  "resolveJsonModule": true // Allow importing JSON modules
+	},
+	"include": [
+	  "src/**/*.ts" // Include all TypeScript files in the src directory
+	],
+	"exclude": [
+	  "node_modules", // Exclude node_modules
+	  "out" // Exclude the output directory
+	]
+  }
