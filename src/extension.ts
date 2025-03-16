@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.showInformationMessage('Running Local Test...');
     // Add your local test logic here
   });
-
+//
   let submitAssessment = vscode.commands.registerCommand('extension.submitAssessment', async () => {
     try {
       // Save all files
