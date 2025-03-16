@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { exec } from 'child_process';
-
+// The module 'vscode' contains the VS Code extensibility API
 export function activate(context: vscode.ExtensionContext) {
   let runLocalTest = vscode.commands.registerCommand('extension.runLocalTest', () => {
     vscode.window.showInformationMessage('Running Local Test...');
